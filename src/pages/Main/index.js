@@ -2,9 +2,30 @@ import React, { useEffect } from 'react';
 
 import Quagga from 'quagga';
 
+import { validateIsbn } from "../../services/books";
+
 import { Video } from './styles';
 
 function Main() {
+  let scannerAttemps = 0;
+
+  const onDetected = result => {
+    Quagga.offDetected();
+
+    const isbn = result.codeResult.code;
+
+    if(validateIsbn(isbn)){
+      alert(isbn);
+      return;
+    }else{
+      if(scannerAttemps >= 5){
+        alert("Erro QR!");
+      }
+    }
+
+    scannerAttemps++;
+    Quagga.onDetected(onDetected);
+  };
   useEffect(() => {
     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
       Quagga.init({
@@ -30,6 +51,7 @@ function Main() {
         }
         Quagga.start();
       }
+      Quagga.onDetected(onDetected);
       );
     }
   }, []);
