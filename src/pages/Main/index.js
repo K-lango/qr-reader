@@ -15,7 +15,7 @@ function Main() {
     const isbn = result.codeResult.code;
 
     if(validateIsbn(isbn)){
-      alert(isbn);
+      alert(`ISBN ${isbn}`);
       return;
     }else{
       if(scannerAttemps >= 5){
